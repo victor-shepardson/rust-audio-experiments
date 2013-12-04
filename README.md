@@ -3,6 +3,10 @@ rust-audio-experiments
 
 real time audio in rust (0.9-pre)
 
+sine_tasks.rs: simple 2-channel sine wave synth demonstrating rust-portaudio with JACK and multiple tasks
+
+ringmod.rs: like sine_tasks, but ring modulates a stereo input signal
+
 #Build
 
 git clone
@@ -17,6 +21,16 @@ make
 
 #Run
 
-install JACK, configure and start JACK server
+install JACK: http://jackaudio.org/download
+
+configure and start JACK server
 
 ./ringmod
+
+#Notes
+
+tested on Ubuntu 13.10
+
+watch out for this bug in PortAudio: https://www.assembla.com/spaces/portaudio/tickets/81#/activity/ticket: streams must have exactly 0 or 2 input channels and exactly 0 or 2 output channels.
+
+to get interactive latency, you may need to configure the "Frames/Period" parameter for the JACK server. Minimum output latency for PortAudio w/ JACK is three times JACK buffer length
