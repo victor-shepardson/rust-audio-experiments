@@ -6,8 +6,8 @@ CFLAGS = -L $(PAPATH)/build/$(ARCH)-unknown-linux-gnu/portaudio/ --link-args -lp
 %: %.rs
 	$(CC) $< $(CFLAGS)
 
-all: sine_tasks ringmod
+all: sine sine_tasks ringmod
 
 clean:
-	rm sine_tasks ringmod
+	rm sine sine_tasks ringmod
 
