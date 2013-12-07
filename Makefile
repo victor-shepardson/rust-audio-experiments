@@ -1,10 +1,13 @@
-all: sine sine_tasks ringmod
-sine:
-	rustc sine.rs -L ~/rust-portaudio/build/x86_64-unknown-linux-gnu/portaudio/ --link-args -lportaudio
-sine_tasks:
-	rustc sine_tasks.rs -L ~/rust-portaudio/build/x86_64-unknown-linux-gnu/portaudio/ --link-args -lportaudio
-ringmod:
-	rustc ringmod.rs -L ~/rust-portaudio/build/x86_64-unknown-linux-gnu/portaudio/ --link-args -lportaudio
+CC = rustc
+ARCH = x86_64
+PAPATH = ~/rust-portaudio
+CFLAGS = -L $(PAPATH)/build/$(ARCH)-unknown-linux-gnu/portaudio/ --link-args -lportaudio
+
+%: %.rs
+	$(CC) $< $(CFLAGS)
+
+all: sine_tasks ringmod
+
 clean:
-	rm sine sine_tasks ringmod
+	rm sine_tasks ringmod
 

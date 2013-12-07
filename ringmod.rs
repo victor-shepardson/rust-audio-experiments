@@ -6,7 +6,7 @@ use portaudio::*;
 use std::num::*;
 use std::f32;
 use std::comm::*;
-use std::rt::io::timer;
+use std::io::timer;
 use extra::arc;
 
 fn main() -> () {
@@ -105,13 +105,13 @@ fn main() -> () {
                         _ => {0.0}
                     }
                 });
-            while(max_pending_buffers <= do synth_pending_buffers.read |count| {*count}) { 
+            while(max_pending_buffers <= synth_pending_buffers.read( |count| {*count})) { 
                 timer::sleep(buf_ms);
             }
             out_chan.send(buf);
-            do synth_pending_buffers.write |count| {
+            synth_pending_buffers.write( |count| {
                 *count+=1;
-            }
+            });
         }
     }
 
@@ -155,9 +155,9 @@ fn main() -> () {
                 }
             }
             stream.write(out_port.recv(), bufframes as u32);
-            do output_pending_buffers.write |count| {
+            output_pending_buffers.write(|count| {
                 *count-=1;
-            }
+            });
         }       
     }
    

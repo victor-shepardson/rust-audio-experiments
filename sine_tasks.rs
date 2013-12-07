@@ -6,7 +6,7 @@ use portaudio::*;
 use std::num::*;
 use std::f32;
 use std::comm::*;
-use std::rt::io::timer;
+use std::io::timer;
 use extra::arc;
 
 fn main() -> () {
@@ -18,7 +18,7 @@ fn main() -> () {
     let channels = 2u;
     let bufframes = 1024u;
     let bufsamples = bufframes*channels;
-    let max_pending_buffers = 2;
+    let max_pending_buffers: uint = 2;
 
     let (port, chan) = stream::<~[Sample]>();
 
@@ -103,13 +103,13 @@ fn main() -> () {
                         _ => {0.0}
                     }
                 });
-            while(max_pending_buffers <= do synth_pending_buffers.read |count| {*count}) { 
+            while(max_pending_buffers <= synth_pending_buffers.read(|count| {*count})) { 
                 timer::sleep(buf_ms);
             }
             chan.send(buf);
-            do synth_pending_buffers.write |count| {
+            synth_pending_buffers.write(|count| {
                 *count+=1;
-            }
+            });
         }
     }
 
@@ -141,9 +141,9 @@ fn main() -> () {
        
         loop{
             stream.write(port.recv(), bufframes as u32);
-            do output_pending_buffers.write |count| {
+            output_pending_buffers.write( |count| {
                 *count-=1;
-            }
+            });
             //stress test
             //timer::sleep(20);
         }       

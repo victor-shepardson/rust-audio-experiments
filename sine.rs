@@ -5,7 +5,6 @@ use portaudio::*;
 use std::num::*;
 use std::f32;
 use std::comm::*;
-use std::rt::io::timer;
 
 fn main() -> () {
     let bufsize = 1024;
@@ -50,8 +49,6 @@ fn main() -> () {
                     phase += f32::consts::PI * 440.0 * isr;
                     sin(phase)
                 });   
-            //stress test
-            timer::sleep(17);
             stream.write(buf, bufsize as u32);
 
         }       
